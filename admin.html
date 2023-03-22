@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+   
+
+    h1 {
+        text-align: center;
+        font-size: 35px;
+        padding-top: 30px;
+        color: rgb(83, 83, 241);
+    }
+
+    .usercardcontainer {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        
+    }
+
+    .card {
+
+        height: 300px;
+        border: 2px solid rgb(83, 83, 241);
+        border-radius: 7px;
+        margin-left: 29px;
+        margin-top: 25px;
+        background-color: rgba(248, 243, 243, 0.37);
+        position: relative;
+
+    }
+
+    .line {
+        height: 0.01rem;
+        background-color: gray;
+        margin-top: 7px;
+    }
+
+    .card>.header {
+        margin-left: 7px;
+        margin-top: 10px;
+        font-weight: bold;
+        font-size: 18px;
+        color: rgb(83, 83, 241);
+
+
+    }
+
+    .card>.body {
+        margin-left: 7px;
+        margin-top: 7px;
+        color: #777;
+    }
+
+    .card>.time {
+        margin-left: 7px;
+        margin-top: -7px;
+        color: #777;
+    }
+
+    .card>.message {
+
+        margin-top: 7px;
+        color: black;
+        padding: 7px 10px;
+    }
+
+
+    .icon {
+        height: 35px;
+        width: 35px;
+        color: rgb(83, 83, 241);
+        margin-left: 230px;
+        margin-top: -20px;
+    }
+
+    
+
+    /* .hide {
+        display: none;
+    } */
+</style>
+
+<body>
+    
+
+        <h1>You've Got Mail!</h1>
+
+        <div class="usercardcontainer" data-usercard-container></div>
+
+        <template data-template>
+            <div class="card">
+                <div class="header" data-header></div>
+                <div class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25
+                     2.25 0 001.183 1.981l6.478 3.488m8.839 2.51l-4.66-2.51m0 0l-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0l-4.661 2.51m16.5 1.615a2.25 2.25 
+                     0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.98l7.5-4.04a2.25 2.25 0 012.134 0l7.5 4.04a2.25 2.25 0 011.183 1.98V19.5z" />
+                    </svg>
+
+                </div>
+                <div class="time" data-time></div>
+                <div class="body" data-body></div>
+                <div class="line"></div>
+                <div class="message" data-message></div>
+
+           
+        </template>
+
+    </div>
+
+
+
+    <script>
+
+        const cardTemplate = document.querySelector("[data-template]")
+        const userContainer = document.querySelector("[data-usercard-container]")
+
+        let users = []
+
+        fetch("http://localhost:3000/")
+            .then(res => res.json())
+            .then(data => {
+
+                console.log(data);
+                users = data.map(user => {
+                    const card = cardTemplate.content.cloneNode(true).children[0]
+                    const header = card.querySelector("[data-header]")
+                    const time = card.querySelector("[data-time]")
+                    const body = card.querySelector("[data-body]")
+                    const message = card.querySelector("[data-message]")
+                    header.textContent = user.name
+                    time.textContent = user.createdAt
+                    body.textContent = user.email
+                    message.textContent = user.message
+                    userContainer.append(card)
+
+                    return {
+                        name: user.name,
+                        time: user.createdAt,
+                        email: user.email,
+                        message: user.message,
+                        element: card
+                    }
+
+
+                })
+            })
+            .catch(error => {
+                console.log(error);
+            })
+
+
+
+
+        // fetch("http://localhost:3000/")
+        //     .then(res => {
+        //         return res.json()
+        //     })
+        //     .then(data => {
+        //         data.forEach(feedback => {
+        //             const markup = `
+        //             <h2>${feedback.name}</h2>
+        //             <p>${feedback.message}</p>
+        //             `
+
+        //             document.querySelector(".sub").insertAdjacentHTML("beforeend", markup)
+        //         });
+
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     })
+
+
+
+    </script>
+
+</html>
